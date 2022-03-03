@@ -1,12 +1,15 @@
-const {merge} = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const base = require('./webpack.base.js');
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
-module.exports = merge(base, {
+const smp = new SpeedMeasurePlugin();
+
+module.exports = smp.wrap(merge(base, {
   mode: 'development',
-  devServer : {
-      open : true,
-      host : 'localhost',
-      port : '8080',
-      hot : true
+  devServer: {
+    open: true,
+    host: 'localhost',
+    port: '1111',
+    hot: true
   }
-});
+}))
