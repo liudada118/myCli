@@ -1,14 +1,12 @@
-import React from 'react'
-import './app.css'
-export default () => {
-  return <div>
-    <Demo name='ddd' />
-    afaffasdfsdfsdfasfasdfsdfasdffadsfsfasdffadsfafasdsdsfd1</div>
-}
-
-interface Props{
-  name : string
-}
-function Demo(props : Props){
-  return <div>{props.name}</div>
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Home from './page/home/index';
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }

@@ -14,7 +14,7 @@ const cssWorkerPool = {
 }
 
 threadLoader.warmup(jsWorkerPool, ['babel-loader'])
-threadLoader.warmup(cssWorkerPool, ['css-loader'])
+threadLoader.warmup(cssWorkerPool, ['css-loader','style-loader'])
 
 module.exports = {
     cache : {
