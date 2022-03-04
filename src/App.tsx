@@ -1,6 +1,8 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import Home from './page/home/index';
+/** @format */
+
+import React from 'react'
+import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
+import Home from './page/home/index'
 export default function App() {
   return (
     <BrowserRouter>
@@ -8,5 +10,5 @@ export default function App() {
         <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
-  );
+  )
 }

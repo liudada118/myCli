@@ -1,17 +1,39 @@
+// {
+//     "editor.codeActionsOnSave": {
+//       "source.fixAll.eslint": true
+//     },
+//     "editor.insertSpaces": false
+//   }
+  
 {
-    "prettier.configPath": ".prettierrc.js",
-    "eslint.options": {
-        "extensions": [
-            ".js",
-            ".ts",
-            ".tsx",
-            "jsx",
-            "html"
-        ]
-    },
-    "editor.codeActionsOnSave": {
-        // 保存时使用eslint进行格式化
-        "source.fixAll.eslint": true
-    },
-    "prettier.singleQuote": true
+  "eslint.enable": true,  //是否开启vscode的eslint
+//   "eslint.autoFixOnSave": true, //是否在保存的时候自动fix eslint
+  "eslint.options": {    //指定vscode的eslint所处理的文件的后缀
+      "extensions": [
+          ".js",
+          ".vue",
+          ".ts",
+          ".tsx"
+      ]
+  },
+  "eslint.validate": [     //确定校验准则
+      "javascript",
+      "javascriptreact",
+      {
+          "language": "html",
+          "autoFix": true
+      },
+      {
+          "language": "vue",
+          "autoFix": true
+      },
+      {
+          "language": "typescript",
+          "autoFix": true
+      },
+      {
+          "language": "typescriptreact",
+          "autoFix": true
+      }
+  ]
 }

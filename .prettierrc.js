@@ -1,13 +1,14 @@
+/** @format */
+
 module.exports = {
-    printWidth: 140,
-    tabWidth: 4,
-    semi: true,
+    printWidth: 120,
+    semi: false,
     singleQuote: true,
-    trailingComma: 'none',
-    bracketSpacing: true,
+    trailingComma: 'all',
+    bracketSpacing: false,
     jsxBracketSameLine: true,
-    arrowParens: 'always',
-    insertPragma: false,
-    requirePragma: false,
-    useTabs: false
-  };
+    arrowParens: 'avoid',
+    insertPragma: true,
+    tabWidth: 2,
+    useTabs: false,
+}
