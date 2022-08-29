@@ -13,8 +13,9 @@ import nature from '@/assets/images/nat.png'
 import side from '@/assets/images/sidenormal.png'
 import {CSVLink, CSVDownload} from 'react-csv'
 import {interp, gaussBlur_1, jet, addSide} from '@/assets/js/util'
+import './bed.scss'
 let wsPointData = []
-let collection = JSON.parse(localStorage.getItem('collection')) ? JSON.parse(localStorage.getItem('collection')) : []
+let collection = [] //JSON.parse(localStorage.getItem('collection')) ? JSON.parse(localStorage.getItem('collection')) : [['数据','软硬','床号','睡姿','性别','姓名','体重','城市','年龄','身高','其他','健康状况','基础病史','联系方式']]
 let csvData
 let wsPointData1 = new Array(2048).fill(0)
 const SEPARATION = 20,
@@ -33,7 +34,39 @@ let computeResult
 let firstData = new Array(1024).fill(1)
 let lastData = new Array(1024).fill(1)
 const itemArr = ['俯视图', '平视图', '三维图']
-const bedArr = ['梦境经典','新梦境Z-Classic','心境系列','尚境系列' ,'意境系列','强护脊','生态英雄','净界系列','正棕Z3系列','正棕Z5系列','Z6心境系列','新幻境','梵境系列','翡洛奇（丝蒂娜）','翡洛奇（苏菲雅）','清雅系列','舒适S3系列','S2舒雅系列','S-冠军系列','X7臻耀系列','快乐时光（思乐）','快乐时光（思怡）','学生垫','婴堡系列（YB)','婴堡系列（YC)','婴堡系列（YE)','乳胶床垫','麻知眠','清新PLUS系列','荣耀V11',]
+const bedArr = [
+  '梦境经典',
+  '新梦境Z-Classic',
+  '心境系列',
+  '尚境系列',
+  '意境系列',
+  '强护脊',
+  '生态英雄',
+  '净界系列',
+  '正棕Z3系列',
+  '正棕Z5系列',
+  'Z6心境系列',
+  '新幻境',
+  '梵境系列',
+  '翡洛奇（丝蒂娜）',
+  '翡洛奇（苏菲雅）',
+  '清雅系列',
+  '舒适S3系列',
+  'S2舒雅系列',
+  'S-冠军系列',
+  'X7臻耀系列',
+  '快乐时光（思乐）',
+  '快乐时光（思怡）',
+  '学生垫',
+  '婴堡系列（YB)',
+  '婴堡系列（YC)',
+  '婴堡系列（YE)',
+  '乳胶床垫',
+  '麻知眠',
+  '清新PLUS系列',
+  '荣耀V11',
+]
+
 let cameraPosition = {}
 let cameraX = 0
 let cameraY = 1400
@@ -207,11 +240,11 @@ class Anta extends React.Component {
     if (jsonObject.data != null) {
       wsPointData = jsonObject.data
       // let arr = []
-     
+
       // if(jsonObject.dataNum === 0){
       //   firstData = jsonObject.data
       // }else{
-      //   lastData = jsonObject.data
+      //   lastData = jsonObject.data.+
       // }
 
       // for(let i = 0 ; i < 32 ; i ++){
@@ -225,9 +258,9 @@ class Anta extends React.Component {
 
       // wsPointData = arr
 
-      wsPointData1 = wsPointData
+      wsPointData1 = [...wsPointData]
 
-      wsPointData1 = wsPointData1.map(a => {
+      wsPointData = wsPointData.map(a => {
         if (a < this.state.filter) {
           return 0
         } else {
@@ -237,7 +270,7 @@ class Anta extends React.Component {
       /**
        * 添加边框(避免高斯溢出)
        * */
-      wsPointData = addSide(wsPointData1, 64, 32, 2, 2, 0)
+      wsPointData = addSide(wsPointData, 64, 32, 2, 2, 0)
 
       /**
        * 计算压力最大面积，最大值，平均值
@@ -247,6 +280,22 @@ class Anta extends React.Component {
   }
   componentDidMount() {
     // myChart1 = echarts.init(document.getElementById(`myChart1`));
+    // let numFlag = 0
+    // const button1 = document.getElementById('button1')
+    // const button2 = document.getElementById('button2')
+    // const button3 = document.getElementById('button3')
+    // setInterval(() => {
+    //   if(numFlag < 360){
+    //     // button1.click()
+    //     this.submit()
+    //     numFlag ++
+    //   }else{
+    //     numFlag = 0 
+    //     button2.click()
+    //     // button3.click();
+    //     this.download()
+    //   }
+    // } ,500)
 
     const doc = document.documentElement
     doc.style.fontSize = `${window.innerWidth / 100}px`
@@ -274,7 +323,7 @@ class Anta extends React.Component {
 
         configWs.onmessage = e => {
           const objData = JSON.parse(e.data)
-          console.log(objData)
+
           if (objData.hasOwnProperty('gaussian')) {
             this.setState({
               valueg1: objData.gaussian,
@@ -282,7 +331,6 @@ class Anta extends React.Component {
           }
 
           if (objData.hasOwnProperty('camera') && id != objData.id) {
-            console.log(22222)
             cameraX = objData.camera.x
             cameraY = objData.camera.y
             cameraZ = objData.camera.z
@@ -406,12 +454,16 @@ class Anta extends React.Component {
       cameraFlag: false,
       id: 0,
       csvData: '',
-      data: 0,
+      data: '0',
       number: JSON.parse(localStorage.getItem('collection'))
         ? JSON.parse(localStorage.getItem('collection')).length
         : 0,
-        bed : ''
+      bed: '梦境经典',
+      sleep: '0',
+      valueArr: [],
+      sex: '男',
     }
+
     this.cameraX = 0
     this.cameraY = 1400
     this.cameraZ = 0
@@ -541,10 +593,23 @@ class Anta extends React.Component {
 
   submit() {
     message.info('采集成功')
-    // console.log(collection,wsPointData)/
-    let data = [JSON.stringify(wsPointData1), this.state.data , this.state.bed]
+
+    let data = [
+      JSON.stringify(wsPointData1),
+      this.state.data,
+      this.state.bed,
+      this.state.sleep,
+      this.state.sex,
+      ...this.state.valueArr,
+    ]
+    // let data = [JSON.stringify(bedArr)]
+
+    // let data = []
+    // for(let i = 0 ; i < bedArr.length; i++){
+    //   data.push(bedArr[i])
+    // }
     collection.push(data)
-    // console.log(collection)
+
     localStorage.setItem('collection', JSON.stringify(collection))
     csvData = JSON.parse(localStorage.getItem('collection'))
     this.setState({
@@ -584,18 +649,29 @@ class Anta extends React.Component {
   download() {
     message.info('删除成功')
     collection = []
-    localStorage.removeItem('collection');
-    this.setState({ number: 0 })
+    localStorage.removeItem('collection')
+    this.setState({number: 0})
   }
 
   handleChange(value) {
-    console.log(value)
     this.setState({data: value})
   }
-  handleBedChange(value){
+  handleBedChange(value) {
     this.setState({bed: value})
   }
-
+  handleSleepChange(value) {
+    this.setState({sleep: value})
+  }
+  handleSexChange(value) {
+    this.setState({sex: value})
+  }
+  changeValue(value, e) {
+    const valueArr = this.state.valueArr
+    valueArr[value] = e.target.value
+    this.setState({
+      valueArr: valueArr,
+    })
+  }
   render() {
     return (
       <>
@@ -626,12 +702,12 @@ class Anta extends React.Component {
 
           <div
             className="com"
-            style={{position: 'fixed', bottom: 30, left: 0, backgroundColor: '#000', zIndex: 2, width: '100%'}}>
+            style={{position: 'fixed', bottom: 30, left: 0, backgroundColor: '#070822', zIndex: 2, width: '100%'}}>
             <div>
               {itemArr.map((item, index) => {
                 return (
                   <button
-                  key={item}
+                    key={item}
                     onClick={() => {
                       if (configWs.readyState === 1) {
                         configWs.send(
@@ -757,7 +833,9 @@ class Anta extends React.Component {
             </div>
           </div>
 
-          <div style={{width: '100%', height: '100%', overflow: 'hidden', backgroundColor: 'black'}} ref={this.canvas}>
+          <div
+            style={{width: '100%', height: '100%', overflow: 'hidden', backgroundColor: '#070822'}}
+            ref={this.canvas}>
             {/* <div style={{display : 'none'}}> */}
             <Com
               valueg={this.state.valueg1}
@@ -812,41 +890,132 @@ class Anta extends React.Component {
             {/* </div> */}
           </div>
 
-          <div className="content bed">
-            <Select defaultValue="0" style={{width: 120}} onChange={this.handleChange.bind(this)}>
-              <Option value="0">过硬</Option>
-              <Option value="1">偏硬</Option>
-              <Option value="2">软硬适中</Option>
-              <Option value="3">偏软</Option>
-              <Option value="4">过软</Option>
-            </Select>
-            <Select defaultValue="梦境经典" style={{width: 240}} onChange={this.handleBedChange.bind(this)}>
-              {bedArr.map((item,index) => {
-                return (
-                  <Option key={item} value={item}>{item}</Option>
-                )
-              })}
-            </Select>
-            <Button
-              plain={true}
-              onClick={() => {
-                this.submit()
-              }}>
-              采集
-            </Button>
-            <Button
-              plain={true}
-              onClick={() => {
-                this.download()
-              }}>
-              删除所有数据
-            </Button>
-            
-            <Button>
-              <CSVLink data={this.state.csvData} style={{color: 'black', textDecoration: 'none'}}>
-                下载数据
-              </CSVLink>
-            </Button>
+          <div className="content col">
+            <div style={{marginBottom: 10, marginTop: '32%'}}>
+              <Select
+                defaultValue="梦境经典"
+                style={{width: 140, marginRight: 10}}
+                onChange={this.handleBedChange.bind(this)}>
+                {bedArr.map((item, index) => {
+                  return (
+                    <Option key={item} value={item}>
+                      {item}
+                    </Option>
+                  )
+                })}
+              </Select>
+
+              <Select defaultValue="0" style={{width: 140}} onChange={this.handleChange.bind(this)}>
+                <Option value="0">过硬</Option>
+                <Option value="1">偏硬</Option>
+                <Option value="2">软硬适中</Option>
+                <Option value="3">偏软</Option>
+                <Option value="4">过软</Option>
+              </Select>
+            </div>
+            <div style={{marginBottom: 10}}>
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="姓名"
+                onChange={this.changeValue.bind(this, 0)}
+              />
+              <Select defaultValue={this.state.sex} style={{width: 140}} onChange={this.handleSexChange.bind(this)}>
+                <Option value="男">男</Option>
+                <Option value="女">女</Option>
+              </Select>
+            </div>
+            <div style={{marginBottom: 10}}>
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="体重"
+                onChange={this.changeValue.bind(this, 1)}
+              />
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="城市"
+                onChange={this.changeValue.bind(this, 2)}
+              />
+            </div>
+            <div style={{marginBottom: 10}}>
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="年龄"
+                onChange={this.changeValue.bind(this, 3)}
+              />
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="身高"
+                onChange={this.changeValue.bind(this, 4)}
+              />
+            </div>
+            <div style={{marginBottom: 10}}>
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="其他"
+                onChange={this.changeValue.bind(this, 5)}
+              />
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="健康状况"
+                onChange={this.changeValue.bind(this, 6)}
+              />
+            </div>
+            <div style={{marginBottom: 10}}>
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="基础病史"
+                onChange={this.changeValue.bind(this, 7)}
+              />
+              <input
+                type="text"
+                style={{width: 140, marginRight: 10}}
+                placeholder="联系方式"
+                onChange={this.changeValue.bind(this, 8)}
+              />
+            </div>
+            <div style={{marginBottom: 10}}>
+              <Button
+                id="button3"
+                plain={true}
+                style={{marginRight: 10, width: 140}}
+                onClick={() => {
+                  this.download()
+                }}>
+                删除数据
+              </Button>
+              <Select defaultValue="0" style={{width: 140}} onChange={this.handleSleepChange.bind(this)}>
+                <Option value="0">平躺</Option>
+                <Option value="1">侧睡</Option>
+                <Option value="2">趴睡</Option>
+                <Option value="3">重物</Option>
+              </Select>
+            </div>
+            <div style={{marginBottom: 10}}>
+              <Button id="button2" style={{width: 140, marginRight: 10}}>
+                <CSVLink data={this.state.csvData} style={{color: 'black', textDecoration: 'none'}}>
+                  下载数据
+                </CSVLink>
+              </Button>
+
+              <Button
+                id="button1"
+                style={{width: 140}}
+                plain={true}
+                onClick={() => {
+                  this.submit()
+                }}>
+                采集
+              </Button>
+            </div>
+
             <div style={{fontSize: 30, color: 'white'}}>{this.state.number}</div>
           </div>
         </div>

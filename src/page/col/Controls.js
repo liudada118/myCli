@@ -24,22 +24,22 @@ const Controls = (props) => {
   })
   useEffect(() => {
     controls.current.start = function () {
-      console.log('start')
+   
     }
     controls.current.addEventListener('change' , function (){
-      console.log('change')
+
     })
     controls.current.addEventListener('end' , function (){
-      console.log('end')
+    
       props.changeCameraFlag(false)
     })
     controls.current.addEventListener('start' , function (){
-      console.log('start')
+   
       props.changeCameraFlag(true)
     })
   })
   function start() {
-    console.log('start')
+  
   }
   return (
     <trackballControls
@@ -51,7 +51,9 @@ const Controls = (props) => {
         CTRL_KEY, // zoom
         CMD_KEY, // pan
       ]}
-      start={() => { console.log(11111111)}}
+      start={() => { 
+     
+      }}
       mouseButtons={{
         LEFT: THREE.MOUSE.PAN, // make pan the default instead of rotate
         MIDDLE: THREE.MOUSE.ZOOM,

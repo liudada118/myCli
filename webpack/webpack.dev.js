@@ -6,10 +6,10 @@ const smp = new SpeedMeasurePlugin();
 
 module.exports = smp.wrap(merge(base, {
   mode: 'development',
-  devServer: {
-    open: true,
-    host: '192.168.31.221',
-    port: '1111',
-    hot: true
-  }
+  // devServer: {
+  //   open: true,
+  //   host: '192.168.31.217',
+  //   port: '1111',
+  //   hot: true
+  // }
 }))

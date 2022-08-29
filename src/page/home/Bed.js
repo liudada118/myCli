@@ -19,7 +19,8 @@ import * as echarts from 'echarts'
 import feature from '@/assets/images/feature.png'
 import bed1 from '@/assets/images/bed1.png'
 import down from '@/assets/images/down.png'
-import {Slider, Button, Select, message} from 'antd'
+import {Slider, Button, Select, message, Input} from 'antd'
+import {jet1} from '../../assets/js/util'
 // let bdata = 0
 // let adata = 0
 // setInterval(() => {
@@ -185,7 +186,6 @@ function Particles(props) {
       }
       // // console.log(JSON.stringify(oldState) != JSON.stringify(newState),[state.camera.rotation.x,state.camera.rotation.y,state.camera.rotation.z,] ,newState,'rotation')
       if (ws.readyState === 1 && JSON.stringify(oldState) != JSON.stringify(newState)) {
-        console.log('change', newState)
         // state.camera.rotation.x = newState[0]
         // state.camera.rotation.y = newState[1]
         // state.camera.rotation.z = newState[2]
@@ -193,7 +193,6 @@ function Particles(props) {
         state.scene.children[2].rotation.x = newState[0]
         state.scene.children[2].rotation.y = newState[1]
         state.scene.children[2].rotation.z = newState[2]
-        console.log(state.scene)
       }
 
       //线性插值
@@ -215,7 +214,7 @@ function Particles(props) {
             smoothBig[j] = smoothBig[j] + (value - smoothBig[j] + 0.5) / props.valuel
 
             positions[i + 1] = smoothBig[j] * props.value // y
-            const rgb = jet(0, props.valuej, smoothBig[j])
+            const rgb = jet1(0, props.valuej, props.valuej1, props.valuej2, props.valuej3, smoothBig[j])
             colors[i] = rgb[0] / 255
             colors[i + 1] = rgb[1] / 255
             colors[i + 2] = rgb[2] / 255
@@ -283,6 +282,9 @@ class Com extends React.Component {
     return (
       nextProps.valueg != this.props.valueg ||
       nextProps.valuej != this.props.valuej ||
+      nextProps.valuej1 != this.props.valuej1 ||
+      nextProps.valuej2 != this.props.valuej2 ||
+      nextProps.valuej3 != this.props.valuej3 ||
       nextProps.value != this.props.value ||
       nextProps.valuef != this.props.valuef ||
       nextProps.valuel != this.props.valuel ||
@@ -329,6 +331,19 @@ class Anta extends React.Component {
           return a
         }
       })
+
+      let a = []
+        for (let i = 0; i < 64; i++) {
+          a[i] = []
+          for (let j = 0; j < 32; j++) {
+            a[i].push(wsPointData1[i * 32 + j])
+          }
+        }
+
+        this.setState({
+          numArr32 : a
+        })
+
       /**
        * 添加边框(避免高斯溢出)
        * */
@@ -471,6 +486,16 @@ class Anta extends React.Component {
               filter: objData.filter,
             })
           }
+          if (objData.hasOwnProperty('value1')) {
+            this.setState({
+              value1: objData.value1,
+            })
+          }
+          if (objData.hasOwnProperty('bed')) {
+            this.setState({
+              bed: objData.bed,
+            })
+          }
         }
         configWs.onerror = e => {
           // an error occurred
@@ -541,6 +566,16 @@ class Anta extends React.Component {
           filter: objData.filter,
         })
       }
+      if (objData.hasOwnProperty('value1')) {
+        this.setState({
+          value1: objData.value1,
+        })
+      }
+      if (objData.hasOwnProperty('bed')) {
+        this.setState({
+          bed: objData.bed,
+        })
+      }
     }
     configWs.onerror = e => {
       // an error occurred
@@ -570,7 +605,7 @@ class Anta extends React.Component {
     this.drop = React.createRef()
     this.num = React.createRef()
     this.state = {
-      filter: Number(localStorage.getItem('filter')) ? Number(localStorage.getItem('filter')) : 2,
+      filter: Number(localStorage.getItem('filter')) ? Number(localStorage.getItem('filter')) : 28, //过滤值
       windowWidth: window.innerWidth,
       rotationX: 0,
       rotationY: 0,
@@ -579,11 +614,14 @@ class Anta extends React.Component {
       postitonY: window.innerWidth > 768 ? -400 : -400, //-250,
       postitonZ: window.innerWidth > 768 ? 200 : 200, //-450,
       time: 0,
-      valuej1: Number(localStorage.getItem('valuej1')) ? Number(localStorage.getItem('valuej1')) : 400,
-      valueg1: Number(localStorage.getItem('valueg1')) ? Number(localStorage.getItem('valueg1')) : 2,
-      value1: Number(localStorage.getItem('value1')) ? Number(localStorage.getItem('value1')) : 0.08,
+      valuej1: Number(localStorage.getItem('valuej1')) ? Number(localStorage.getItem('valuej1')) : 1010, // 饱和度
+      valuej2: Number(localStorage.getItem('valuej2')) ? Number(localStorage.getItem('valuej2')) : 1010, // 饱和度
+      valuej3: Number(localStorage.getItem('valuej3')) ? Number(localStorage.getItem('valuej3')) : 1010, // 饱和度
+      valuej: Number(localStorage.getItem('valuej')) ? Number(localStorage.getItem('valuej')) : 1010, // 饱和度
+      valueg1: Number(localStorage.getItem('valueg1')) ? Number(localStorage.getItem('valueg1')) : 3, // 高斯
+      value1: Number(localStorage.getItem('value1')) ? Number(localStorage.getItem('value1')) : 0.23, // z
       valuef1: Number(localStorage.getItem('valuef1')) ? Number(localStorage.getItem('valuef1')) : 1000,
-      valuel: Number(localStorage.getItem('valuel')) ? Number(localStorage.getItem('valuel')) : 10,
+      valuel: Number(localStorage.getItem('valuel')) ? Number(localStorage.getItem('valuel')) : 6, // 数据连贯性
       bedFetchData1: 0,
       bedFetchData2: 0,
       numArr32: [],
@@ -595,7 +633,7 @@ class Anta extends React.Component {
       cameraY: window.innerWidth > 1020 ? 1400 : 1000,
       display: false,
       click: false,
-      bed: '',
+      bed: undefined,
     }
     this.cameraX = 0
     this.cameraY = 1400
@@ -611,12 +649,9 @@ class Anta extends React.Component {
   componentWillUnmount() {
     pageClose = true
     if (ws) {
-      console.log(1111)
-
       ws.close()
     }
     if (configWs) {
-      console.log(1111)
       configWs.close()
     }
   }
@@ -647,7 +682,7 @@ class Anta extends React.Component {
       },
       yAxis: {
         type: 'value',
-        splitNumber: 2,
+        splitNumber: 3,
         splitLine: {
           show: true,
           lineStyle: {
@@ -656,7 +691,7 @@ class Anta extends React.Component {
             type: 'solid',
           },
         },
-        max: 20,
+        max: 30,
         axisLabel: {
           show: true,
           textStyle: {
@@ -742,7 +777,6 @@ class Anta extends React.Component {
           item: this.state.item + 1,
         },
         () => {
-          console.log(this.state.item)
           if (this.state.item === 1) {
             this.changeRotation(-Math.PI / 2, 0, 0)
             this.setState({
@@ -857,7 +891,7 @@ class Anta extends React.Component {
   render() {
     return (
       <>
-        {/* <div style={{backgroundColor: 'rgba(0,0,0,0)', position: 'fixed', color: 'white', zIndex: 5, top: 100}}>
+        <div style={{backgroundColor: 'rgba(0,0,0,0)', position: 'fixed', color: 'white', zIndex: 5, top: 100}}>
           <div style={{fontSize : 30 , color : 'white'}}> {this.state.num}</div>
           {this.state.numArr32.map((items, index) => {
             return (
@@ -867,7 +901,7 @@ class Anta extends React.Component {
                     <div
                       style={{
                         width: 20,
-                        color : item < 100 ? 'black' : 'white' 
+                        color : item < 0 ? 'black' : 'white' 
                       }}>
                       {item}
                     </div>
@@ -876,12 +910,33 @@ class Anta extends React.Component {
               </div>
             )
           })}
-        </div> */}
-        {this.state.bed ? '':<div style={{ position : 'fixed',top : 0 , left : 0,width : '100vw',height : '100vh', zIndex:100,  backgroundColor : 'rgba(0,0,0,0.7)' ,}}></div>}
+        </div>
+        {this.state.bed ? (
+          ''
+        ) : (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              zIndex: 100,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+            }}></div>
+        )}
         <div className="font" style={{width: '100%', height: '100vh', overflow: 'hidden', position: 'relative'}}>
           <div
-          // className="fontLight"
-            style={{position: 'fixed', top: 30, left: 30, zIndex: 200, display: 'flex', alignItems: 'end', width: '65%'}}>
+            // className="fontLight"
+            style={{
+              position: 'fixed',
+              top: 30,
+              left: 30,
+              zIndex: 200,
+              display: 'flex',
+              alignItems: 'end',
+              width: '65%',
+            }}>
             <div style={{width: '20%', marginRight: 30}}>
               <img src={nature} style={{width: '100%'}} alt="" />
             </div>
@@ -908,27 +963,34 @@ class Anta extends React.Component {
               onChange={this.onChange}
               onSearch={this.onSearch}
               maxTagCount={12}
-              size='large'
+              size="large"
               // options={[{
               //   title : false
               // }]}
               // min-width={300}
+              value={this.state.bed}
               listHeight={400}
-              style={{ minWidth: '10%' }}
-              onSelect={(value) => { 
-                this.select.current.blur();
+              style={{minWidth: '10%'}}
+              onSelect={value => {
+                this.select.current.blur()
                 this.setState({
-                  bed : value
+                  bed: value,
                 })
-                console.log('选择',value)
+                if (configWs.readyState === 1) {
+                  configWs.send(
+                    JSON.stringify({
+                      bed: value,
+                    }),
+                  )
+                }
               }}
               dropdownMatchSelectWidth={300}
-    //           filterOption={(input, option) => (option!.children as unknown as string).includes(input)}
-    // filterSort={(optionA, optionB) =>
-    //   (optionA!.children as unknown as string)
-    //     .toLowerCase()
-    //     .localeCompare((optionB!.children as unknown as string).toLowerCase())
-    // }
+              //           filterOption={(input, option) => (option!.children as unknown as string).includes(input)}
+              // filterSort={(optionA, optionB) =>
+              //   (optionA!.children as unknown as string)
+              //     .toLowerCase()
+              //     .localeCompare((optionB!.children as unknown as string).toLowerCase())
+              // }
               // filterOption={(input, option) =>
               //   (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase()
               //   )
@@ -1010,7 +1072,41 @@ class Anta extends React.Component {
                 </div>
                 <div className="color">
                   <div>坐垫颜色饱和度</div>
-                  <Slider
+                  <div style={{display: 'flex'}}>
+                    <Input
+                      value={this.state.valuej}
+                      onChange={e => {
+                        const value = e.target.value
+                        localStorage.setItem('valuej', value)
+                        this.setState({valuej: e.target.value})
+                      }}
+                    />
+                    <Input
+                      value={this.state.valuej1}
+                      onChange={e => {
+                        const value = e.target.value
+                        localStorage.setItem('valuej1', value)
+                        this.setState({valuej1: e.target.value})
+                      }}
+                    />
+                    <Input
+                      value={this.state.valuej2}
+                      onChange={e => {
+                        const value = e.target.value
+                        localStorage.setItem('valuej2', value)
+                        this.setState({valuej2: e.target.value})
+                      }}
+                    />
+                    <Input
+                      value={this.state.valuej3}
+                      onChange={e => {
+                        const value = e.target.value
+                        localStorage.setItem('valuej3', value)
+                        this.setState({valuej3: e.target.value})
+                      }}
+                    />
+                  </div>
+                  {/* <Slider
                     min={100}
                     max={1200}
                     onChange={value => {
@@ -1028,7 +1124,7 @@ class Anta extends React.Component {
                     step={10}
                     // value={}
                     style={{flex: 1}}
-                  />
+                  /> */}
                 </div>
                 <div className="position">
                   <div>positionZ</div>
@@ -1038,6 +1134,13 @@ class Anta extends React.Component {
                     onChange={value => {
                       localStorage.setItem('value1', value)
                       this.setState({value1: value})
+                      if (configWs.readyState === 1) {
+                        configWs.send(
+                          JSON.stringify({
+                            value1: value,
+                          }),
+                        )
+                      }
                     }}
                     value={this.state.value1}
                     step={0.01}
@@ -1101,7 +1204,10 @@ class Anta extends React.Component {
             {/* <div style={{display : 'none'}}> */}
             <Com
               valueg={this.state.valueg1}
-              valuej={this.state.valuej1}
+              valuej={this.state.valuej}
+              valuej1={this.state.valuej1}
+              valuej2={this.state.valuej2}
+              valuej3={this.state.valuej3}
               value={this.state.value1}
               valuef={this.state.valuef}
               valuel={this.state.valuel}
@@ -1132,7 +1238,10 @@ class Anta extends React.Component {
                   rotationY={this.state.rotationY}
                   rotationZ={this.state.rotationZ}
                   rotationX={this.state.rotationX}
-                  valuej={this.state.valuej1}
+                  valuej={this.state.valuej}
+                  valuej1={this.state.valuej1}
+                  valuej2={this.state.valuej2}
+                  valuej3={this.state.valuej3}
                   valueg={this.state.valueg1}
                   value={this.state.value1}
                   valuel={this.state.valuel}

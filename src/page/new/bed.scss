@@ -1,0 +1,260 @@
+.dataItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    text-align: center;
+}
+
+.dataItem img {
+    width: 100%;
+}
+
+.dataItemImg {
+    position: absolute;
+    top: 0;
+    left: 0
+}
+
+.dataContent {
+    display: flex;
+    justify-content: space-around;
+    padding: 0 5rem 1rem;
+    color: #00ffff;
+    align-items: center;
+}
+
+.reportDataContent{
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+.postContent {
+    display: flex;
+    align-items: center;
+}
+
+.postInfo{
+    margin-right: 2rem;
+}
+
+.postContent{
+    margin-bottom: 1.5rem;
+}
+
+.degreeProgress {
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+.progressStrip {
+    width: 100%;
+    background-color: #282a3f;
+    height: 10px;
+    border-radius: 5px;
+    border: #00b5f1 solid 2px;
+}
+
+.progressRound {
+    height: 20px;
+    background-color: #fff;
+    width: 20px;
+    border-radius: 10px;
+    border: 4px #00ffff solid;
+    position: absolute;
+}
+
+.degreeInfo{
+    display: flex;
+    justify-content: space-between;
+}
+
+.button {
+    height: 5rem;
+}
+
+.button img {
+    height: 100%;
+}
+
+.recomPage {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+}
+
+.recomBg {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../../assets/image1/recomBig.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    position: fixed;
+}
+
+
+.recomContent{
+    width: 70%;
+    display: flex;
+    flex-wrap: wrap;
+    color: #fff;
+    align-items:center;
+    justify-content: space-around;
+}
+
+.recomInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.recomItem {
+    flex: 0 0 45%;
+}
+.recomItem:nth-child(2n-1){
+    margin-bottom: 2rem;
+}
+
+.recomed{
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.recomed img {
+    width: 1.5rem
+}
+
+.reportPage {
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reportTitle {
+    height: 5rem;
+    display: flex;
+    justify-content:space-between
+}
+
+
+
+.reportTitle img {
+    height: 100%;
+}
+
+
+
+.reportMain {
+    color: #fff;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.dataContent {
+    display: 'flex';
+    justify-content: 'space-around';
+    padding: 0 5rem 1rem;
+    color: #00ffff;
+    align-items: center;
+}
+
+.reportMain{
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.postImg {
+    width: 13rem;
+}
+
+.postImg img {
+    width: 100%;
+}
+
+
+.personContent{
+    display: flex;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+}
+
+.personImg{
+    width: 70%;
+}
+
+.personImg img{
+    width: 70%;
+}
+
+
+.reportRecom{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    color: #fff;
+    
+}
+.reportRecomImg{
+    margin-right: 2rem;
+}
+.reportRecom img{
+    width: 100%;
+}
+
+.reportContent{
+    background-color: #0f0f40;
+    width: 80%;
+    padding: 5rem 10rem;
+}
+
+.reportDataContent{
+    display: flex;
+    justify-content: space-around;
+    padding: 0 5rem 1rem;
+    color: #00ffff;
+    align-items: center;
+}
+
+.reportRecomBed{
+    width: 70%;
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.reportRecomInfo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.reportRecomName{
+    font-size: 1.5rem;
+}
+
+.reportRecomed{
+    font-size: 2.5rem;
+    text-align: left;
+}
+.reportRecomed img{
+    width: 2rem;
+}

@@ -1,4 +1,10 @@
-.content.bed{
+.content.col{
+    ::placeholder {
+        text-align: center;
+      }
+      input{
+        text-align: center;
+      }
     .testStart{
         width: 200px ;
         height: 200px;

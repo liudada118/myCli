@@ -105,3 +105,46 @@ export function jet(min, max, x) {
   rgb[2] = parseInt(255 * blue + '')
   return rgb
 }
+
+
+export function jet1(min,value1,value2,value3, max, x) {
+  // console.log(value1,value2,value3)
+  let red, g, blue
+  let dv
+  red = 1.0
+  g = 1.0
+  blue = 1.0
+  if (x < min) {
+    x = min
+  }
+  // if (x > max) {
+  //   x = max
+  // }
+  dv = max - min
+  if (x < value1) {
+    // red = 0;
+    // g = 0;
+    // blue = 1.0;
+
+    red = 1
+    g = 1
+    blue = 1
+  } else if (x < value2) {
+    g = 0
+    red = 0
+    blue = 1 
+  } else if (x < value3) {
+    red = 0
+    blue = 0
+    g = 1
+  } else {
+    g = 0 
+    blue = 0
+    red = 1
+  }
+  var rgb = []
+  rgb[0] = parseInt(255 * red + '')
+  rgb[1] = parseInt(255 * g + '')
+  rgb[2] = parseInt(255 * blue + '')
+  return rgb
+}
