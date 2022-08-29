@@ -29,6 +29,7 @@ import report from '../../assets/image1/report.png'
 import recommend from '../../assets/image1/recommend.png'
 import star from '../../assets/image1/star.png'
 import {Link} from 'react-router-dom'
+import recomBox from '../../assets/image1/recomBox.png'
 // import bed1 from '../../assets/images/bed1.png'
 import './bed.scss'
 // let bdata = 0
@@ -343,10 +344,10 @@ class Anta extends React.Component {
         }
       })
 
-      const allPress = wsPointData1.reduce( (a,b) => a+b , 0)
+      const allPress = wsPointData1.reduce((a, b) => a + b, 0)
       const allNum = wsPointData1.filter(a => a > 0).length
       this.setState({
-        press : allPress/allNum
+        press: allPress / allNum,
       })
       // let a = []
       //   for (let i = 0; i < 32; i++) {
@@ -407,9 +408,8 @@ class Anta extends React.Component {
             : jsonObject.sleep_pos === 3
             ? '趴睡'
             : '坐着',
-          breatheData : jsonObject.breath_rate,
-          moveData : jsonObject.bodymove_data,
-
+        breatheData: jsonObject.breath_rate,
+        moveData: jsonObject.bodymove_data,
       })
 
       // this.initCharts({
@@ -666,10 +666,10 @@ class Anta extends React.Component {
       display: false,
       click: false,
       bed: undefined,
-      sleep_pos : '--',
-      breatheData : 0,
-      moveData : 0,
-      press : 0
+      sleep_pos: '--',
+      breatheData: 0,
+      moveData: 0,
+      press: 0,
     }
     this.cameraX = 0
     this.cameraY = 1400
@@ -804,6 +804,14 @@ class Anta extends React.Component {
         rotationZ: z,
       })
     }
+  }
+
+  showRecom(){
+    const page = document.querySelector('.recomPage')
+    page.style.transform = `translateY(0)`
+    page.style.opacity = 1
+    page.style.transition = `all 0.4s`
+    console.log(page.style)
   }
 
   changeItem() {
@@ -1110,11 +1118,11 @@ class Anta extends React.Component {
                   <div>{Number(this.state.press).toFixed(0)}mmhg</div>
                 </div>
               </div>
-              <Link to="/re">
-                <div className="reportButton button">
+              {/* <Link to="/re"> */}
+                <div className="reportButton button" onClick={() => {this.showRecom()}}>
                   <img src={report} alt="" />
                 </div>
-              </Link>
+              {/* </Link> */}
               <Link to="/report">
                 <div className="reComButton button">
                   <img src={recommend} alt="" />
@@ -1318,66 +1326,68 @@ class Anta extends React.Component {
 
           <div className="recomPage">
             <div className="recomBg">
-              <img src="" alt="" />
-            </div>
-            <div className="recomItem">
-              <div className="recomInfo">
-                <div className="recomImg">
-                  <img src={bed1} alt="" />
+              {/* <img src={bed1} alt="" /> */}
+              </div>
+            <div className="recomContent">
+              <div className="recomItem">
+                <div className="recomInfo">
+                  <div className="recomImg">
+                    <img src={bed1} alt="" />
+                  </div>
+                  <div className="recomName">意境床垫</div>
                 </div>
-                <div className="recomName">意境床垫</div>
-              </div>
-              <div className="recomed">
-                推荐指数
-                {new Array(5).fill(0).map((item, index) => {
-                  console.log(index)
-                  return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
-                })}
-              </div>
-            </div>
-            <div className="recomItem">
-              <div className="recomInfo">
-                <div className="recomImg">
-                  <img src={bed1} alt="" />
+                <div className="recomed">
+                  推荐指数:
+                  {new Array(5).fill(0).map((item, index) => {
+                    console.log(index)
+                    return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
+                  })}
                 </div>
-                <div className="recomName">意境床垫</div>
               </div>
-              <div className="recomed">
-                推荐指数
-                {new Array(5).fill(0).map((item, index) => {
-                  console.log(index)
-                  return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
-                })}
-              </div>
-            </div>
-            <div className="recomItem">
-              <div className="recomInfo">
-                <div className="recomImg">
-                  <img src={bed1} alt="" />
+              <div className="recomItem">
+                <div className="recomInfo">
+                  <div className="recomImg">
+                    <img src={bed1} alt="" />
+                  </div>
+                  <div className="recomName">意境床垫</div>
                 </div>
-                <div className="recomName">意境床垫</div>
-              </div>
-              <div className="recomed">
-                推荐指数
-                {new Array(5).fill(0).map((item, index) => {
-                  console.log(index)
-                  return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
-                })}
-              </div>
-            </div>
-            <div className="recomItem">
-              <div className="recomInfo">
-                <div className="recomImg">
-                  <img src={bed1} alt="" />
+                <div className="recomed">
+                  推荐指数:
+                  {new Array(5).fill(0).map((item, index) => {
+                    console.log(index)
+                    return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
+                  })}
                 </div>
-                <div className="recomName">意境床垫</div>
               </div>
-              <div className="recomed">
-                推荐指数
-                {new Array(5).fill(0).map((item, index) => {
-                  console.log(index)
-                  return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
-                })}
+              <div className="recomItem">
+                <div className="recomInfo">
+                  <div className="recomImg">
+                    <img src={bed1} alt="" />
+                  </div>
+                  <div className="recomName">意境床垫</div>
+                </div>
+                <div className="recomed">
+                  推荐指数:
+                  {new Array(5).fill(0).map((item, index) => {
+                    console.log(index)
+                    return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
+                  })}
+                </div>
+              </div>
+              <div className="recomItem">
+                <div className="recomInfo">
+                  <div className="recomImg">
+                    <img src={bed1} alt="" />
+                  </div>
+                  <div className="recomName">意境床垫</div>
+                </div>
+                <div className="recomed">
+                  推荐指数:
+                  {new Array(5).fill(0).map((item, index) => {
+                    console.log(index)
+                    return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
+                  })}
+                </div>
               </div>
             </div>
           </div>
