@@ -15,11 +15,11 @@ import sidevery from '@/assets/images/sidevery.png'
 import nature from '@/assets/images/nat.png'
 import side from '@/assets/images/sidenormal.png'
 import {interp, gaussBlur_1, jet, addSide, stack} from '@/assets/js/util'
-import * as echarts from 'echarts'
+
 import feature from '@/assets/images/feature.png'
 import bed1 from '@/assets/images/bed1.png'
 import down from '@/assets/images/down.png'
-import {Slider, Button, Select, message, Input} from 'antd'
+import {Select, Modal, Input, Button} from 'antd'
 import {jet1} from '../../assets/js/util'
 import view from '../../assets/image1/view.png'
 import item from '../../assets/image1/item.png'
@@ -30,6 +30,13 @@ import recommend from '../../assets/image1/recommend.png'
 import star from '../../assets/image1/star.png'
 import {Link} from 'react-router-dom'
 import recomBox from '../../assets/image1/recomBox.png'
+// import nature from '@/assets/images/nat.png'
+// import item from '../../assets/image1/item.png'
+import titleRight from '../../assets/image1/titleRight.png'
+import body from '../../assets/image1/body.png'
+// import recomBox from '../../assets/image1/recomBox.png'
+// import bed1 from '@/assets/images/bed1.png'
+// import star from '../../assets/image1/star.png'
 // import bed1 from '../../assets/images/bed1.png'
 import './bed.scss'
 // let bdata = 0
@@ -370,33 +377,6 @@ class Anta extends React.Component {
        * 计算压力最大面积，最大值，平均值
        * */
     } else {
-      // this.breathe.dataStable(jsonObject.breath_rate)
-      // this.move.dataStable(jsonObject.bodymove_data)
-      // if (this.breatheData.current) {
-      //   this.breatheData.current.innerText = `${parseInt(jsonObject.breath_rate)}/次`
-      //   this.moveData.current.innerText = `${parseInt(jsonObject.bodymove_data)}/次`
-      //   this.sleepData.current.innerText = `${
-      //     jsonObject.sleep_pos === 0
-      //       ? '无人'
-      //       : jsonObject.sleep_pos === 1
-      //       ? '平躺'
-      //       : jsonObject.sleep_pos === 2
-      //       ? '侧躺'
-      //       : jsonObject.sleep_pos === 3
-      //       ? '趴睡'
-      //       : '坐着'
-      //   }`
-
-      //   // this.img.current.children
-      //   for (let i = 0; i < this.img.current.children.length; i++) {
-      //     if (i === jsonObject.spine_curvature) {
-      //       this.img.current.children[i].style.display = 'unset'
-      //     } else {
-      //       this.img.current.children[i].style.display = 'none'
-      //     }
-      //   }
-      // }
-
       this.setState({
         sleep_pos:
           jsonObject.sleep_pos === 0
@@ -411,23 +391,6 @@ class Anta extends React.Component {
         breatheData: jsonObject.breath_rate,
         moveData: jsonObject.bodymove_data,
       })
-
-      // this.initCharts({
-      //   yData: this.breathe.arr,
-      //   xData: new Array(10).fill(0),
-      //   index: 0 + 1,
-      //   name: 0,
-      //   myChart: this.myChart1,
-      //   color: '#f9c935',
-      // })
-      // this.initCharts({
-      //   yData: this.move.arr,
-      //   xData: new Array(10).fill(0),
-      //   index: 0 + 2,
-      //   name: 0,
-      //   myChart: this.myChart2,
-      //   color: '#2ac1e9',
-      // })
     }
   }
   componentDidMount() {
@@ -631,6 +594,62 @@ class Anta extends React.Component {
     }
   }
 
+  setIsModalVisible(value) {
+    this.setState({
+      isModalVisible: value,
+    })
+  }
+
+  showModal() {
+    // this.setIsModalVisible(true)
+
+    // console.log(111)
+    const page = document.querySelector('.reportInput')
+    page.style.visibility = 'unset'
+    page.style.transform = `translateY(0)`
+    page.style.opacity = 1
+    page.style.transition = `all 0.4s`
+  }
+
+  hiddenReport() {
+    const page = document.querySelector('.reportInput')
+    page.style.transform = `translateY(40px)`
+    page.style.opacity = 0
+    page.style.transition = `all 0.4s`
+    setTimeout(() => {
+      page.style.visibility = 'hidden'
+    }, 380)
+  }
+
+  showReport(){
+
+    const page1 = document.querySelector('.reportInput')
+    page1.style.transform = `translateY(40px)`
+    page1.style.opacity = 0
+    page1.style.transition = `all 0.4s`
+    setTimeout(() => {
+      page1.style.visibility = 'hidden'
+    }, 380)
+
+    const page = document.querySelector('.reportPage')
+    // page.style.transform = `translateY(40px)`
+    // page.style.opacity = 0
+    // page.style.transition = `all 0.4s`
+    // setTimeout(() => {
+    //   page.style.visibility = 'hidden'
+    // }, 380)
+
+    page.style.visibility = 'unset'
+  }
+
+  handleOk() {
+    this.setIsModalVisible(false)
+  }
+
+  handleCancel() {
+    this.setIsModalVisible(false)
+  }
+
   constructor(props) {
     super(props)
     this.start = React.createRef()
@@ -657,6 +676,7 @@ class Anta extends React.Component {
       bedFetchData1: 0,
       bedFetchData2: 0,
       numArr32: [],
+      isModalVisible: false,
       num: 1,
       item: 0,
       cameraZ: 0,
@@ -670,6 +690,9 @@ class Anta extends React.Component {
       breatheData: 0,
       moveData: 0,
       press: 0,
+      phone : '',
+      name : '',
+      sex : ''
     }
     this.cameraX = 0
     this.cameraY = 1400
@@ -690,93 +713,6 @@ class Anta extends React.Component {
     if (configWs) {
       configWs.close()
     }
-  }
-
-  initCharts(props) {
-    // console.log(props.yData)
-    let option = {
-      animation: false,
-      tooltip: {
-        trigger: 'axis',
-        show: false,
-      },
-      xAxis: {
-        type: 'category',
-        data: props.xData,
-        axisLabel: {
-          show: true,
-          textStyle: {
-            color: 'transparent',
-          },
-        },
-      },
-      grid: {
-        top: this.state.windowWidth > 768 ? 20 : 0,
-        left: this.state.windowWidth > 768 ? 20 : 0,
-        bottom: this.state.windowWidth > 768 ? 20 : 0,
-        right: this.state.windowWidth > 768 ? 20 : 0,
-      },
-      yAxis: {
-        type: 'value',
-        splitNumber: 3,
-        splitLine: {
-          show: true,
-          lineStyle: {
-            color: '#e4e4e4',
-            width: 0.5,
-            type: 'solid',
-          },
-        },
-        max: 30,
-        axisLabel: {
-          show: true,
-          textStyle: {
-            color: 'transparent',
-          },
-        },
-      },
-      series: [
-        {
-          symbol: 'none',
-          data: props.yData,
-          type: 'line',
-          smooth: true,
-          color: '#3591c3',
-
-          itemStyle: {
-            normal: {
-              lineStyle: {
-                color: props.color,
-              },
-              color: {
-                x: 0,
-                y: 1,
-                x2: 0,
-                y2: 0,
-                colorStops: [
-                  {
-                    offset: 0,
-                    color: 'red', // 0% 处的颜色
-                  },
-                  {
-                    offset: 1,
-                    color: 'blue', // 100% 处的颜色
-                  },
-                ],
-                global: false, // 缺省为 false
-              },
-            },
-          },
-        },
-        {},
-      ],
-    }
-
-    option && props.myChart.setOption(option)
-
-    // window.addEventListener('resize', function () {
-    //   props.myChart.resize()
-    // })
   }
 
   changeValueg(value) {
@@ -806,12 +742,23 @@ class Anta extends React.Component {
     }
   }
 
-  showRecom(){
+  showRecom() {
     const page = document.querySelector('.recomPage')
+    page.style.visibility = 'unset'
     page.style.transform = `translateY(0)`
     page.style.opacity = 1
     page.style.transition = `all 0.4s`
-    console.log(page.style)
+    // console.log(page.style)
+  }
+
+  hiddenRecom() {
+    const page = document.querySelector('.recomPage')
+    page.style.transform = `translateY(40px)`
+    page.style.opacity = 0
+    page.style.transition = `all 0.4s`
+    setTimeout(() => {
+      page.style.visibility = 'hidden'
+    }, 380)
   }
 
   changeItem() {
@@ -935,45 +882,11 @@ class Anta extends React.Component {
   render() {
     return (
       <>
-        {/* <div style={{backgroundColor: 'rgba(0,0,0,0)', position: 'fixed', color: 'white', zIndex: 5, top: 100}}>
-          <div style={{fontSize : 30 , color : 'white'}}> {this.state.num}</div>
-          {this.state.numArr32.map((items, index) => {
-            return (
-              <div style={{display: 'flex'}}>
-                {items?.map((item, index) => {
-                  return (
-                    <div
-                      style={{
-                        width: 20,
-                        color : item < 0 ? 'black' : 'white' 
-                      }}>
-                      {item}
-                    </div>
-                  )
-                })}
-              </div>
-            )
-          })}
-        </div> */}
-        {/* {this.state.bed ? (
-          ''
-        ) : (
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100vw',
-              height: '100vh',
-              zIndex: 100,
-              backgroundColor: 'rgba(0,0,0,0.7)',
-            }}></div>
-        )} */}
-        <div className="font" style={{width: '100%', height: '100vh', overflow: 'hidden', position: 'relative'}}>
+        <div style={{width: '100%', height: '100vh', overflow: 'hidden', position: 'relative'}}>
           <div
             // className="fontLight"
             style={{
-              position: 'fixed',
+              position: 'absolute',
               top: 30,
               left: 30,
               zIndex: 200,
@@ -1028,22 +941,7 @@ class Anta extends React.Component {
                   )
                 }
               }}
-              dropdownMatchSelectWidth={300}
-              //           filterOption={(input, option) => (option!.children as unknown as string).includes(input)}
-              // filterSort={(optionA, optionB) =>
-              //   (optionA!.children as unknown as string)
-              //     .toLowerCase()
-              //     .localeCompare((optionB!.children as unknown as string).toLowerCase())
-              // }
-              // filterOption={(input, option) =>
-              //   (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase()
-              //   )
-              // }
-            >
-              {/* <Option value="jack">Jack</Option>
-    <Option value="lucy">Lucy</Option>
-    <Option value="tom">Tom</Option>
-    <Option value="tom">Tom3333333</Option> */}
+              dropdownMatchSelectWidth={300}>
               {bedArr.map((item, index) => {
                 return (
                   <Option key={item} value={item}>
@@ -1055,9 +953,9 @@ class Anta extends React.Component {
           </div>
 
           <div
-            className="com font"
+            className="com"
             style={{
-              position: 'fixed',
+              position: 'absolute',
               bottom: '1rem',
               left: '1rem',
               backgroundColor: 'rgba(0,0,0,0)',
@@ -1066,7 +964,7 @@ class Anta extends React.Component {
               fontWeight: 'normal',
               color: 'rgb(149 148 147)',
             }}>
-            <div>
+            <div className="font">
               <img
                 onClick={this.changeItem.bind(this)}
                 style={{width: '50px', height: '50px', marginRight: 10}}
@@ -1076,7 +974,7 @@ class Anta extends React.Component {
               <span style={{lineHeight: '50px'}}>{itemArr[this.state.item]}</span>
             </div>
 
-            <div className="dataContent">
+            <div className="dataContent fontFounder">
               <div>
                 <div className="comfortTitle">床垫舒适度</div>
                 <div className="postContent">
@@ -1119,15 +1017,24 @@ class Anta extends React.Component {
                 </div>
               </div>
               {/* <Link to="/re"> */}
-                <div className="reportButton button" onClick={() => {this.showRecom()}}>
-                  <img src={report} alt="" />
-                </div>
+
+              <div
+                className="reportButton button"
+                onClick={() => {
+                  this.showModal()
+                }}>
+                <img src={report} alt="" />
+              </div>
               {/* </Link> */}
-              <Link to="/report">
-                <div className="reComButton button">
-                  <img src={recommend} alt="" />
-                </div>
-              </Link>
+              {/* <Link to="/report"> */}
+              <div
+                className="reComButton button"
+                onClick={() => {
+                  this.showRecom()
+                }}>
+                <img src={recommend} alt="" />
+              </div>
+              {/* </Link> */}
             </div>
             {/* <div style={{display: 'flex', width: '65%', backgroundColor: 'rgba(0,0,0,0)'}}>
                 <div className="smooth">
@@ -1324,10 +1231,58 @@ class Anta extends React.Component {
             {/* </div> */}
           </div>
 
-          <div className="recomPage">
-            <div className="recomBg">
-              {/* <img src={bed1} alt="" /> */}
+          <div
+            className="reportInput"
+            onClick={() => {
+              this.hiddenReport()
+              console.log('click1')
+            }}>
+            <div
+              className="inputContent"
+              onClick={event => {
+                event.stopPropagation()
+              }}>
+                <div className="inputItem">请输入信息</div>
+              <div className="inputItem">
+                <div className="itemName">姓名</div> <Input onChange={(e) => {
+                  this.setState({
+                  name : e.target.value
+                })
+                
+                }} />
               </div>
+              <div className="inputItem">
+                <div className="itemName">性别</div> <Input onChange={(e) => {
+                  this.setState({
+                  sex : e.target.value
+                })
+                
+                }} />
+              </div>
+              <div className="inputItem">
+                <div className="itemName">联系方式</div> <Input onChange={(e) => {
+                  this.setState({
+                  phone : e.target.value
+                })
+                
+                }} />
+              </div>
+              <div className="reportButton">
+                <Button onClick={() => {
+                  this.showReport()
+                }}>生成报告</Button>
+              </div>
+            </div>
+          </div>
+          <div
+            className="recomPage"
+            onClick={() => {
+              this.hiddenRecom()
+            }}>
+            {/* <div className="recomBgContent"> */}
+            <div className="recomBg"></div>
+            {/* </div> */}
+
             <div className="recomContent">
               <div className="recomItem">
                 <div className="recomInfo">
@@ -1392,6 +1347,69 @@ class Anta extends React.Component {
             </div>
           </div>
         </div>
+
+        <div className="reportPage">
+      <div className="reportContent">
+        <div className="reportTitle">
+          <img src={nature} alt="" />
+          <img src={titleRight} alt="" />
+        </div>
+        <div className="reportMain fontFounder">专属定制报告</div>
+        <div className="personContent">
+          <div className="personImg">
+            <img src={body} alt="" />
+          </div>
+          <div className="personInfo">
+            <p>姓名: {this.state.name}</p>
+            <p>性别: {this.state.sex}</p>
+            <p>联系方式: {this.state.phone}</p>
+          </div>
+        </div>
+
+        <div className="reportDataContent">
+          <div className="dataItem">
+            <img className="dataItemImg" src={item} alt="" />
+            <div>
+              <div>呼吸</div>
+              <div>32次/min</div>
+            </div>
+          </div>
+          <div className="dataItem">
+            <img className="dataItemImg" src={item} alt="" />
+            <div>
+              <div>体动</div>
+              <div>6次/min</div>
+            </div>
+          </div>
+          <div className="dataItem">
+            <img className="dataItemImg" src={item} alt="" />
+            <div>
+              <div>平均压力</div>
+              <div>38mmhg</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="reportRecom">
+          <img src={recomBox} alt="" />
+          <div className="reportRecomBed">
+            <div className="reportRecomInfo">
+              <div className="reportRecomImg">
+                <img src={bed1} alt="" />
+              </div>
+              <div className="reportRecomName">意境床垫</div>
+            </div>
+            <div className="reportRecomed">
+              推荐指数:
+              {new Array(5).fill(0).map((item, index) => {
+                console.log(index)
+                return <img key={index} style={{display: index < 4 ? 'unset' : 'none'}} src={star} alt="" />
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
       </>
     )
   }

@@ -1,3 +1,20 @@
+.com .dataItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    font-size: 0.8rem;
+    text-align: center;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-name: breathe;
+    -webkit-animation-duration: 1500ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+    border-radius: 3rem;
+}
+
 .dataItem {
     display: flex;
     align-items: center;
@@ -5,8 +22,9 @@
     position: relative;
     width: 6rem;
     height: 6rem;
-    font-size: 1rem;
+    font-size: 0.8rem;
     text-align: center;
+    
 }
 
 .dataItem img {
@@ -83,6 +101,41 @@
     height: 100%;
 }
 
+.reportInput{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.7);
+    position: absolute;
+    z-index: 300;
+    top: 0;
+    transform: translateY(40px);
+    opacity: 0;
+    visibility: hidden;
+    color: #000;
+}
+
+.inputItem{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.inputContent{
+    padding: 20px;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0 0px 5px 5px rgba(0,255,255,0.3),
+}
+// .inputItem input {
+//     width: 100px;
+// }
+.itemName{
+    width: 100px;
+}
+
 .recomPage {
     width: 100vw;
     height: 100vh;
@@ -91,22 +144,58 @@
     color: #fff;
     align-items: center;
     justify-content: center;
-    background-color: #000;
+    background-color: rgba(0,0,0,0.7);
     position: absolute;
+    z-index: 300;
     top: 0;
     transform: translateY(40px);
     opacity: 0;
+    visibility: hidden;
+}
+
+.reportButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes breathe {
+    0% {
+        opacity: .7;
+        box-shadow: 0 1px 5px rgba(0,255,255,0.3), 0 1px 5px rgba(0,255,255,0.3) inset;
+    }
+
+    100% {
+        opacity: 1;
+        // border: 1px solid rgba(187, 5, 14, 0.7);
+        box-shadow: 0 1px 5px 8px rgba(0,255,255,0.3), 0 1px 5px 8px rgba(0,255,255,0.3) inset;
+    }
+}
+
+.ant-modal-content{
+    z-index: 500;
+}
+
+.recomBgContent{
+
+    width: 100vw;height: 100vh;
+    background-color: rgba(0,0,0,1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
 }
 
 .recomBg {
     width: 90vw;
-    // height: 90vh;
-    // background-image: url('../../assets/image1/recomBig.png');
+    height: 90vh;
+    background-image: url('../../assets/image1/recomBig.png');
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
     position: fixed;
 }
+
 
 
 
@@ -148,6 +237,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: fixed;
+    visibility: hidden;
+    top: 0;
+    overflow-y: scroll;
 }
 
 .reportTitle {
