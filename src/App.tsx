@@ -9,16 +9,17 @@ import Report from './page/new/Report'
 import './app.css'
 // import Demo from './page/home/Demo'
 import Col from './page/col/Bed'
+import Local from './page/local/Bed'
 // import Data from './page/num/Data'
 export default function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<New />} />
+        {/* <Route path="/" element={<New />} />
         <Route path="/re" element={<Recom />} />
-        <Route path="/report" element={<Report />} />
+        <Route path="/report" element={<Report />} /> */}
         {/* <Route path="/bed" element={<Bed />} /> */}
-        {/* <Route path="/" element={<Col />} /> */}
+        <Route path="/" element={<Local />} />
         {/* <Route path="/demo" element={<Demo />} /> */}
       </Routes>
     </HashRouter>
